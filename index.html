@@ -24,17 +24,31 @@
         }
 
         div.tooltip {
-          position: absolute;
-          text-align: center;
-          width: 100px;
-          height: 50px;
-          padding: 2px;
-          font: 12px sans-serif;
-          background: lightsteelblue;
-          border: 0px;
-          border-radius: 8px;
-          pointer-events: none;
+            position: absolute;
+            width: 180px;
+            height: 90px;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
         }
+
+        #stateName {
+            margin-top: 5px;
+            font-size: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #stateLegislatureHighlights {
+            font: 13px sans-serif;
+            text-align: left;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 2px;
+        }
+
     </style>
 </head>
 <body>
@@ -58,12 +72,19 @@
         var div = d3.select("body").append("div")
                     .attr("class", "tooltip")
                     .style("opacity", 0);
+        
         // parse the date / time
         var parseTime = d3.timeParse("%d-%b-%y");
         var formatTime = d3.timeFormat("%e %B");
 
+        // Map out state level elections
+        var stateLevelInfo = new Map();
+
         var promises = [
-          d3.json('https://cdn.jsdelivr.net/npm/us-atlas/counties-10m.json')
+            d3.json('https://cdn.jsdelivr.net/npm/us-atlas/counties-10m.json'),
+            d3.csv("stateLevelInfo.csv", function(d) { 
+                stateLevelInfo.set(d.State, [new Map([['StateSenate', d.StateSenate]]), new Map([['StateHouse', d.StateHouse]]), new Map([['Governor', d.Governor]]), new Map([['Color', d.StateColor]])])
+            })
         ]
 
         Promise.all(promises).then(ready)
@@ -73,14 +94,23 @@
             const nation = topojson.feature(us, us.objects.nation).features[0];
             const counties = topojson.feature(us, us.objects.counties).features;
 
+            var state_names = []
+            for (i = 0; i < states.length; i++) {
+                state_names.push(states[i].properties.name);
+                // console.log(stateLevelInfo.get(states[i].properties.name)[2].get('Governor'));
+            }
+
             // scale to fit bounds
             projection.fitSize([width, height], nation);
 
             const state_data = states.map((feature) => ({
                 feature: feature,
-                // name: feature.properties.name,
                 name: feature.properties.name,
-                value: Math.random() // random value
+                value: Math.random(), // random value
+                state_senate: stateLevelInfo.get(feature.properties.name)[0].get('StateSenate'),
+                state_house: stateLevelInfo.get(feature.properties.name)[1].get('StateHouse'),
+                governor: stateLevelInfo.get(feature.properties.name)[2].get('Governor'),
+                state_color: stateLevelInfo.get(feature.properties.name)[3].get('Color')
             }));
 
             // Map out states
@@ -103,17 +133,27 @@
                     return p;
                 })
                 .attr('d', (d) => path(d.feature))
-                .style('fill', (d) => color(d.value))
+                .style('fill', function(d) {
+                    if (d.state_color == 'Red') {
+                        return '#B93E3C';
+                    }
+                    else if (d.state_color == 'Blue'){
+                        return '#3673B2';
+                    }
+                    else {
+                        return '#DECDBE';
+                    }
+                })
                 .on("mouseover", function(event,d) {
                     div.transition()
                     .duration(200)
                     .style("opacity", .9);
                     // div.html(formatTime(d.date) + "<br/>" + d.close)
                     div.html(
-                        d.name + "<br/>" +
-                        "Governor:" + parseInt(d.value, 10) + "<br/>" +
-                        "State Senate:" + parseInt(d.value, 10) + "<br/>" +
-                        "State House:" + parseInt(d.value, 10))
+                        "<div id='stateName'>" + d.name + "</div><div id='stateLegislatureHighlights'>" +
+                        "Governor: " + d.governor + "<br/>" +
+                        "State Senate: " + d.state_senate + "<br/>" +
+                        "State House: " + d.state_house + "</div>")
                     .style("left", (event.pageX) + "px")
                     .style("top", (event.pageY - 28) + "px");
                 })
