@@ -13,6 +13,7 @@
         body {
             font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
         }
+
         path {
           stroke: #999;
         }
@@ -23,18 +24,28 @@
 
         div.tooltip {
             position: absolute;
-            width: 180px;
-            height: 90px;
-            background: lightsteelblue;
-            border: 0px;
-            border-radius: 8px;
-            pointer-events: none;
+            margin-top: 5px;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 240px;
+            height: 140px;
+
+            background: white;
+            text-align: left;
+
+            border-color: transparent;
+            box-shadow: 0 0 0 2px #ddd;
+        }
+
+        .tooltipcell {
+            padding: 5px;
+            color: white;
         }
 
         #stateName {
             margin-top: 5px;
-            font-size: 15px;
-            text-align: center;
+            font-size: 18px;
+            text-align: left;
             padding-bottom: 10px;
             font-weight: bold;
         }
@@ -50,34 +61,20 @@
         .grid-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-gap: 2px;
+            /*grid-gap: 2px;*/
             display: flex;
-            padding: 2px;
-            /*border: 2px solid purple;*/
         }
         .grid-child-left {
             width: 60%;
             padding: 2px;
+            padding-left: 2%;
             /*border: 2px solid blue;*/
         }
         .grid-child-right {
             width: 40%;
             padding: 2px;
+            padding-right: 2%;
             /*border: 2px solid blue;*/
-        }
-        .internal {
-            width: auto;
-            /*border: 2px solid red;*/
-            font-size: 24px;
-            text-align: center;
-        }
-        .internal-ballot-measures {
-            width: auto;
-            padding: 10px;
-            margin-top: 10px;
-            /*border: 2px solid red;*/
-            font-size: 22px;
-            background-color:#ddd;
         }
         @media (max-width: 767px) {
             .grid-container {
@@ -88,13 +85,50 @@
                 width: auto;
             }
         }
-        ul.no-bullets {
-          list-style-type: none; /* Remove bullets */
-          padding: 0; /* Remove padding */
-          margin: 0; /* Remove margins */
-        }
+
         .select {
             font-size: 22px;
+        }
+
+        .internal {
+            width: auto;
+            /*border: 2px solid red;*/
+            font-size: 24px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        #services-list {
+            list-style: none;
+            width: auto;
+            margin-top: 10px;
+            /*background-color:#ddd;*/
+
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border-color: transparent;
+            box-shadow: 0 0 0 2px #ddd;
+        }
+
+        #services-list:hover {
+            background-color: #ddd;
+        }
+
+        #services-list p{
+            margin-top: 10px;
+            font-size: 24px;
+            padding: 10px;
+        }
+
+        #services-list > .image{
+            display:block;
+            float:left;
+            margin-right: 10px;
+            width: 24px;
+            height: 24px;
+            padding: 10px;
         }
     </style>
 </head>
@@ -107,11 +141,30 @@
         </div>
         <div class="grid-child-right">
             <div class="internal" id="map_title">Ballot Measures</div>
+            <div class="internal" id="map_toggle"></div>
             <div class="intenal" id="map">
                 <ul class="no-bullets">
-                    <li class="internal-ballot-measures">Measure 1</li>
-                    <li class="internal-ballot-measures">Measure 2</li>
-                    <li  class="internal-ballot-measures">Measure 3</li>
+                    <li id="services-list">
+                        <a href="" class="image">
+                            <img src="check.png" alt="Facebook Icon" width="24px" height="30px" />
+                        </a>
+                        <p>Measure 1</p>
+                        
+                    </li>
+
+                    <li id="services-list">
+                        <a href="" class="image">
+                            <img src="wrong.png" alt="Facebook Icon" width="24px" height="24px" />
+                        </a>
+                            <p>Measure 2</p>
+                    </li>
+
+                    <li id="services-list">
+                        <a href="" class="image">
+                            <img src="check.png" alt="Facebook Icon" width="24px" height="30px" />
+                        </a>
+                            <p>Measure 3</p>
+                    </li>
                 </ul>
             </div>
         </div>   
@@ -312,10 +365,20 @@
                         .duration(200)
                         .style("opacity", .9);
                         div.html(
-                            "<div id='stateName'>" + d.name + "</div><div id='stateLegislatureHighlights'>" +
-                            "Governor: " + d.governor + "<br/>" +
-                            "State Senate: " + d.state_senate + "<br/>" +
-                            "State House: " + d.state_house + "</div>")
+                            "<div id='stateName'>" + d.name + "</div>\
+                                <table style=\"width:100%\">\
+                                    <tr>\
+                                        <td>Governor</td><td class=\"tooltipcell\" bgcolor=" + ((d.governor == 'Republican') ? '#B93E3C' : ((d.governor == 'Democratic') ? '#3673B2' : '#DECDBE')) + ">" + d.governor +"</td>\
+                                    </tr>\
+                                    <tr>\
+                                        <td>State Senate</td><td class=\"tooltipcell\" bgcolor=" + ((d.state_senate == 'Republican') ? '#B93E3C' : ((d.state_senate == 'Democratic') ? '#3673B2' : '#DECDBE')) + ">" + d.state_senate +"</td>\
+                                    </tr>\
+                                    <tr>\
+                                        <td>State House</td><td class=\"tooltipcell\" bgcolor=" + ((d.state_house == 'Republican') ? '#B93E3C' : ((d.state_house == 'Democratic') ? '#3673B2' : '#DECDBE')) + ">" + d.state_house +"</td>\
+                                    </tr>\
+                                </table>\
+                            "
+                            )
                         .style("left", (event.pageX) + "px")
                         .style("top", (event.pageY - 28) + "px");
                     })
