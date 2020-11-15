@@ -1,57 +1,113 @@
-﻿State,StateSenate,StateHouse,Governor,StateColor
-Arizona,Democratic,Democratic,Democratic,Blue
-Louisiana,Republican,Democratic,Democratic,Blue
-Idaho,Democratic,Republican,Democratic,Purple
-Minnesota,Democratic,Republican,Democratic,Red
-North Dakota,Democratic,Republican,Republican,Purple
-South Dakota,Democratic,Republican,Democratic,Red
-New York,Democratic,Republican,Democratic,Red
-Alaska,Democratic,Democratic,Democratic,Blue
-Georgia,Republican,Democratic,Democratic,Blue
-Indiana,Republican,Democratic,Republican,Purple
-Michigan,Republican,Democratic,Democratic,Red
-Mississippi,Republican,Republican,Democratic,Purple
-Ohio,Republican,Republican,Democratic,Red
-Texas,Democratic,Republican,Democratic,Red
-Puerto Rico,Democratic,Republican,Republican,Blue
-Nebraska,Democratic,Democratic,Republican,Blue
-Colorado,Democratic,Democratic,Republican,Purple
-Maryland,Republican,Democratic,Republican,Red
-Kansas,Republican,Democratic,Republican,Purple
-Illinois,Republican,Republican,Democratic,Red
-Wisconsin,Republican,Democratic,Republican,Red
-California,Democratic,Democratic,Democratic,Blue
-Iowa,Democratic,Democratic,Democratic,Blue
-Pennsylvania,Democratic,Democratic,Democratic,Purple
-Montana,Democratic,Republican,Republican,Red
-Missouri,Republican,Democratic,Republican,Purple
-Florida,Democratic,Democratic,Republican,Red
-Kentucky,Democratic,Democratic,Republican,Red
-Maine,Democratic,Democratic,Democratic,Blue
-Utah,Democratic,Republican,Republican,Blue
-Oklahoma,Republican,Republican,Republican,Purple
-Tennessee,Democratic,Republican,Republican,Red
-Oregon,Democratic,Republican,Republican,Purple
-West Virginia,Democratic,Republican,Democratic,Red
-Arkansas,Democratic,Democratic,Democratic,Red
-Washington,Republican,Republican,Democratic,Blue
-North Carolina,Republican,Democratic,Republican,Blue
-Virginia,Republican,Democratic,Democratic,Purple
-Wyoming,Republican,Democratic,Democratic,Red
-Alabama,Republican,Republican,Democratic,Purple
-South Carolina,Democratic,Republican,Democratic,Red
-New Mexico,Republican,Republican,Democratic,Red
-New Hampshire,Democratic,Republican,Democratic,Blue
-American Samoa,Democratic,Democratic,Republican,Blue
-Vermont,Democratic,Republican,Republican,Purple
-Nevada,Republican,Republican,Republican,Red
-Hawaii,Republican,Republican,Republican,Purple
-Massachusetts,Republican,Republican,Republican,Red
-United States Virgin Islands,Republican,Democratic,Democratic,Red
-Rhode Island,Democratic,Democratic,Democratic,Blue
-New Jersey,Republican,Democratic,Democratic,Blue
-Delaware,Republican,Republican,Democratic,Purple
-Connecticut,Republican,Democratic,Republican,Red
-Commonwealth of the Northern Mariana Islands,Republican,Democratic,Republican,Purple
-Guam,Democratic,Democratic,Republican,Red
-District of Columbia,Democratic,Democratic,Republican,Red
+﻿ElectionType,Year,State,StateSenate,StateHouse,Governor,StateColor
+Midterm,2018,Alabama,Republican,Republican,Republican,Red
+Midterm,2018,Alaska,Republican,Republican,Republican,Red
+Midterm,2018,American Samoa,,,,
+Midterm,2018,Arizona,Republican,Republican,Republican,Red
+Midterm,2018,Arkansas,Republican,Republican,Republican,Red
+Midterm,2018,California,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Colorado,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Commonwealth of the Northern Mariana Islands,,,,
+Midterm,2018,Connecticut,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Delaware,Democratic,Democratic,Democratic,Blue
+Midterm,2018,District of Columbia,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Florida,Republican,Republican,Republican,Red
+Midterm,2018,Georgia,Republican,Republican,Republican,Red
+Midterm,2018,Guam,,,,
+Midterm,2018,Hawaii,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Idaho,Republican,Republican,Republican,Red
+Midterm,2018,Illinois,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Indiana,Republican,Republican,Republican,Red
+Midterm,2018,Iowa,Republican,Republican,Republican,Red
+Midterm,2018,Kansas,Republican,Republican,Democratic,Purple
+Midterm,2018,Kentucky,Republican,Republican,Democratic,Purple
+Midterm,2018,Louisiana,Republican,Republican,Democratic,Purple
+Midterm,2018,Maine,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Maryland,Democratic,Democratic,Republican,Purple
+Midterm,2018,Massachusetts,Democratic,Democratic,Republican,Purple
+Midterm,2018,Michigan,Republican,Republican,Democratic,Purple
+Midterm,2018,Minnesota,Republican,Democratic,Democratic,Purple
+Midterm,2018,Mississippi,Republican,Republican,Republican,Red
+Midterm,2018,Missouri,Republican,Republican,Republican,Red
+Midterm,2018,Montana,Republican,Republican,Republican,Red
+Midterm,2018,Nebraska,--,Republican,Republican,Red
+Midterm,2018,Nevada,Democratic,Democratic,Democratic,Blue
+Midterm,2018,New Hampshire,Democratic,Democratic,Republican,Purple
+Midterm,2018,New Jersey,Democratic,Democratic,Democratic,Blue
+Midterm,2018,New Mexico,Democratic,Democratic,Democratic,Blue
+Midterm,2018,New York,Democratic,Democratic,Democratic,Blue
+Midterm,2018,North Carolina,Republican,Republican,Democratic,Purple
+Midterm,2018,North Dakota,Republican,Republican,Republican,Red
+Midterm,2018,Ohio,Republican,Republican,Republican,Red
+Midterm,2018,Oklahoma,Republican,Republican,Republican,Red
+Midterm,2018,Oregon,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Pennsylvania,Republican,Republican,Democratic,Purple
+Midterm,2018,Puerto Rico,,,,
+Midterm,2018,Rhode Island,Democratic,Democratic,Democratic,Blue
+Midterm,2018,South Carolina,Republican,Republican,Republican,Red
+Midterm,2018,South Dakota,Republican,Republican,Republican,Red
+Midterm,2018,Tennessee,Republican,Republican,Republican,Red
+Midterm,2018,Texas,Republican,Republican,Republican,Red
+Midterm,2018,United States Virgin Islands,,,,
+Midterm,2018,Utah,Republican,Republican,Republican,Red
+Midterm,2018,Vermont,Democratic,Democratic,Republican,Purple
+Midterm,2018,Virginia,Democratic,Democratic,Democratic,Blue
+Midterm,2018,Washington,Democratic,Democratic,Democratic,Blue
+Midterm,2018,West Virginia,Republican,Republican,Republican,Red
+Midterm,2018,Wisconsin,Republican,Republican,Democratic,Purple
+Midterm,2018,Wyoming,Republican,Republican,Republican,Red
+Presidential,2020,Alabama,Republican,Republican,Republican,Red
+Presidential,2020,Alaska,Republican,Republican,Republican,Red
+Presidential,2020,American Samoa,,,,
+Presidential,2020,Arizona,Republican,Republican,Republican,Red
+Presidential,2020,Arkansas,Republican,Republican,Republican,Red
+Presidential,2020,California,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Colorado,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Commonwealth of the Northern Mariana Islands,,,,
+Presidential,2020,Connecticut,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Delaware,Democratic,Democratic,Democratic,Blue
+Presidential,2020,District of Columbia,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Florida,Republican,Republican,Republican,Red
+Presidential,2020,Georgia,Republican,Republican,Republican,Red
+Presidential,2020,Guam,,,,
+Presidential,2020,Hawaii,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Idaho,Republican,Republican,Republican,Red
+Presidential,2020,Illinois,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Indiana,Republican,Republican,Republican,Red
+Presidential,2020,Iowa,Republican,Republican,Republican,Red
+Presidential,2020,Kansas,Republican,Republican,Democratic,Purple
+Presidential,2020,Kentucky,Republican,Republican,Democratic,Purple
+Presidential,2020,Louisiana,Republican,Republican,Democratic,Purple
+Presidential,2020,Maine,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Maryland,Democratic,Democratic,Republican,Purple
+Presidential,2020,Massachusetts,Democratic,Democratic,Republican,Purple
+Presidential,2020,Michigan,Republican,Republican,Democratic,Purple
+Presidential,2020,Minnesota,Republican,Democratic,Democratic,Purple
+Presidential,2020,Mississippi,Republican,Republican,Republican,Red
+Presidential,2020,Missouri,Republican,Republican,Republican,Red
+Presidential,2020,Montana,Republican,Republican,Republican,Red
+Presidential,2020,Nebraska,--,Republican,Republican,Red
+Presidential,2020,Nevada,Democratic,Democratic,Democratic,Blue
+Presidential,2020,New Hampshire,Republican,Republican,Republican,Red
+Presidential,2020,New Jersey,Democratic,Democratic,Democratic,Blue
+Presidential,2020,New Mexico,Democratic,Democratic,Democratic,Blue
+Presidential,2020,New York,Democratic,Democratic,Democratic,Blue
+Presidential,2020,North Carolina,Republican,Republican,Democratic,Purple
+Presidential,2020,North Dakota,Republican,Republican,Republican,Red
+Presidential,2020,Ohio,Republican,Republican,Republican,Red
+Presidential,2020,Oklahoma,Republican,Republican,Republican,Red
+Presidential,2020,Oregon,Republican,Democratic,Democratic,Blue
+Presidential,2020,Pennsylvania,Republican,Republican,Democratic,Purple
+Presidential,2020,Puerto Rico,,,,
+Presidential,2020,Rhode Island,Democratic,Democratic,Democratic,Blue
+Presidential,2020,South Carolina,Republican,Republican,Republican,Red
+Presidential,2020,South Dakota,Republican,Republican,Republican,Red
+Presidential,2020,Tennessee,Republican,Republican,Republican,Red
+Presidential,2020,Texas,Tie,Republican,Republican,Purple
+Presidential,2020,United States Virgin Islands,,,,
+Presidential,2020,Utah,Republican,Republican,Republican,Red
+Presidential,2020,Vermont,Democratic,Democratic,Republican,Purple
+Presidential,2020,Virginia,Democratic,Democratic,Democratic,Blue
+Presidential,2020,Washington,Tie,Democratic,Democratic,Purple
+Presidential,2020,West Virginia,Republican,Republican,Republican,Red
+Presidential,2020,Wisconsin,Republican,Republican,Democratic,Purple
+Presidential,2020,Wyoming,Republican,Republican,Republican,Red

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <script src="d3.min.js"></script>
-<!-- <script src="topojson.v2.min.js"></script>
- --><script type="text/javascript" src="https://d3js.org/topojson.v3.min.js"></script>
+<script type="text/javascript" src="https://d3js.org/topojson.v3.min.js"></script>
 
 <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
@@ -12,13 +11,12 @@
     <title>US Map Analysis</title>
     <style>
         body {
-          width: 800px;
-          margin: 25px auto;
-          font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+            font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
         }
         path {
           stroke: #999;
         }
+
         path:hover {
           stroke: black;
         }
@@ -49,11 +47,77 @@
             padding-bottom: 2px;
         }
 
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 2px;
+            display: flex;
+            padding: 2px;
+            /*border: 2px solid purple;*/
+        }
+        .grid-child-left {
+            width: 60%;
+            padding: 2px;
+            /*border: 2px solid blue;*/
+        }
+        .grid-child-right {
+            width: 40%;
+            padding: 2px;
+            /*border: 2px solid blue;*/
+        }
+        .internal {
+            width: auto;
+            /*border: 2px solid red;*/
+            font-size: 24px;
+            text-align: center;
+        }
+        .internal-ballot-measures {
+            width: auto;
+            padding: 10px;
+            margin-top: 10px;
+            /*border: 2px solid red;*/
+            font-size: 22px;
+            background-color:#ddd;
+            border: 0px;
+            border-radius: 8px;
+        }
+        @media (max-width: 767px) {
+            .grid-container {
+                flex-direction: column;
+            }
+            .grid-child-left,
+            .grid-child-right {
+                width: auto;
+            }
+        }
+        ul.no-bullets {
+          list-style-type: none; /* Remove bullets */
+          padding: 0; /* Remove padding */
+          margin: 0; /* Remove margins */
+        }
+        .select {
+            font-size: 22px;
+        }
     </style>
 </head>
 <body>
-    <div class="viz"></div>
-
+    <div class="grid-container">
+        <div class="grid-child-left">
+            <div class="internal" id="map_title"></div>
+            <div class="internal" id="map_toggle"></div>
+            <div class="internal" id="map"></div>
+        </div>
+        <div class="grid-child-right">
+            <div class="internal" id="map_title">Ballot Measures</div>
+            <div class="intenal" id="map">
+                <ul class="no-bullets">
+                    <li class="internal-ballot-measures">Measure 1</li>
+                    <li class="internal-ballot-measures">Measure 2</li>
+                    <li  class="internal-ballot-measures">Measure 3</li>
+                </ul>
+            </div>
+        </div>   
+    </div>
 
     <script type="text/javascript">
         const margin = {
@@ -77,13 +141,58 @@
         var parseTime = d3.timeParse("%d-%b-%y");
         var formatTime = d3.timeFormat("%e %B");
 
+        // Unique Function
+        function onlyUnique(value, index, self) {
+            return self.indexOf(value) === index;
+        }
+
+        function responsivefy(svg) {
+          // container will be the DOM element
+          // that the svg is appended to
+          // we then measure the container
+          // and find its aspect ratio
+          const container = d3.select(svg.node().parentNode),
+              width = parseInt(svg.style('width'), 10),
+              height = parseInt(svg.style('height'), 10),
+              aspect = width / height;
+         
+          // set viewBox attribute to the initial size
+          // control scaling with preserveAspectRatio
+          // resize svg on inital page load
+          svg.attr('viewBox', `0 0 ${width} ${height}`)
+              .attr('preserveAspectRatio', 'xMinYMid')
+              .call(resize);
+         
+          // add a listener so the chart will be resized
+          // when the window resizes
+          // multiple listeners for the same event type
+          // requires a namespace, i.e., 'click.foo'
+          // api docs: https://goo.gl/F3ZCFr
+          d3.select(window).on(
+              'resize.' + container.attr('id'), 
+              resize
+          );
+         
+          // this is the code that resizes the chart
+          // it will be called on load
+          // and in response to window resizes
+          // gets the width of the container
+          // and resizes the svg to fill it
+          // while maintaining a consistent aspect ratio
+          function resize() {
+              const w = parseInt(container.style('width'));
+              svg.attr('width', w);
+              svg.attr('height', Math.round(w / aspect));
+          }
+        }
+
         // Map out state level elections
-        var stateLevelInfo = new Map();
+        var stateLevelInfo = [];
 
         var promises = [
             d3.json('https://cdn.jsdelivr.net/npm/us-atlas/counties-10m.json'),
             d3.csv("stateLevelInfo.csv", function(d) { 
-                stateLevelInfo.set(d.State, [new Map([['StateSenate', d.StateSenate]]), new Map([['StateHouse', d.StateHouse]]), new Map([['Governor', d.Governor]]), new Map([['Color', d.StateColor]])])
+                stateLevelInfo.push({"ElectionType": d.ElectionType, "Year": d.Year, "State": d.State, "StateSenate": d.StateSenate, "StateHouse": d.StateHouse, "Governor": d.Governor, "Color": d.StateColor})
             })
         ]
 
@@ -97,126 +206,129 @@
             var state_names = []
             for (i = 0; i < states.length; i++) {
                 state_names.push(states[i].properties.name);
-                // console.log(stateLevelInfo.get(states[i].properties.name)[2].get('Governor'));
             }
 
-            // scale to fit bounds
-            projection.fitSize([width, height], nation);
+            // Add title to graph
+            var svg = d3.select('#map_title');
+            svg.append("text")
+                .text("State-Level Partisanship")
 
-            const state_data = states.map((feature) => ({
-                feature: feature,
-                name: feature.properties.name,
-                value: Math.random(), // random value
-                state_senate: stateLevelInfo.get(feature.properties.name)[0].get('StateSenate'),
-                state_house: stateLevelInfo.get(feature.properties.name)[1].get('StateHouse'),
-                governor: stateLevelInfo.get(feature.properties.name)[2].get('Governor'),
-                state_color: stateLevelInfo.get(feature.properties.name)[3].get('Color')
-            }));
+            // Get options for drop-down
+            var select_options = d3.map(stateLevelInfo, function(d){return d.Year;}).filter(onlyUnique);
 
-            // Map out states
-            var svg = d3
-                    .select("body")
-                    .append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("id","states")
-                    // .attr("transform", `translate(${margin.left}, ${margin.top})`);
+            // Create drop-down in d3.js
+            var select = d3.select('#map_toggle')
+                            .append('select')
+                            .attr('class','select')
+                            .on('change', onChange)
 
-            var paths = svg.selectAll('path').data(state_data)
-                            .join((enter) => {
-                    const p = enter.append('path');
-                    p.on('mouseenter', function() { 
-                        d3.select(this).raise();
+            // Map - parameters
+            var w = window,
+                d = document,
+                e = d.documentElement,
+                width = 800 || w.innerWidth || e.clientWidth || g.clientWidth,
+                height = 600 || w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+            // Map out states in d3.js
+            var map_svg = d3.select('#map')
+                            .append("svg")
+                            .attr("width", width)
+                            .attr("height", height)
+                            .call(responsivefy);
+
+            var g = d.getElementById("map_svg");
+
+            // Populate drow-down values
+            var options = select.selectAll('option')
+                                .data(select_options.reverse())
+                                .enter()
+                                .append('option')
+                                .text(function (d) {
+                                    return d; 
+                                });
+
+            // Re-Draw map when option in drop-down is changed
+            function onChange() {
+                selectValue = d3.select('select').property('value')
+                drawMap(stateLevelInfo, selectValue, map_svg);
+            };
+
+            // Draw the map on load
+            function onLoad(selectValue) {
+                drawMap(stateLevelInfo, selectValue, map_svg);
+            };
+
+            // Initialize map to last element in the drop-down
+            if (select_options !== null) {
+                onLoad(select_options[0]);
+            }
+
+            // Re-draw the map based on selection from drop-down
+            function drawMap(input_data, opt, svg) {
+                console.log(opt)
+                var iter_state_data = new Map();
+
+                input_data.forEach(function(d) {
+                    if (d.Year === opt) {
+                      iter_state_data.set(d.State, [new Map([['StateSenate', d.StateSenate]]), new Map([['StateHouse', d.StateHouse]]), new Map([['Governor', d.Governor]]), new Map([['Color', d.Color]])])
+                    }
+                })
+
+                // scale to fit bounds
+                projection.fitSize([width, height], nation);
+
+                const state_data = states.map((feature) => ({
+                    feature: feature,
+                    name: feature.properties.name,
+                    value: Math.random(), // random value
+
+                    state_senate: iter_state_data.get(feature.properties.name)[0].get('StateSenate'),
+                    state_house: iter_state_data.get(feature.properties.name)[1].get('StateHouse'),
+                    governor: iter_state_data.get(feature.properties.name)[2].get('Governor'),
+                    state_color: iter_state_data.get(feature.properties.name)[3].get('Color')
+                }));
+
+                var paths = svg.selectAll('path').data(state_data)
+                                .join((enter) => {
+                        const p = enter.append('path');
+                        p.on('mouseenter', function() { 
+                            d3.select(this).raise();
+                        });
+                        p.append('title');
+                        return p;
+                    })
+                    .attr('d', (d) => path(d.feature))
+                    .style('fill', function(d) {
+                        if (d.state_color == 'Red') {
+                            return '#B93E3C';
+                        }
+                        else if (d.state_color == 'Blue'){
+                            return '#3673B2';
+                        }
+                        else {
+                            return '#DECDBE';
+                        }
+                    })
+                    .on("mouseover", function(event,d) {
+                        div.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                        div.html(
+                            "<div id='stateName'>" + d.name + "</div><div id='stateLegislatureHighlights'>" +
+                            "Governor: " + d.governor + "<br/>" +
+                            "State Senate: " + d.state_senate + "<br/>" +
+                            "State House: " + d.state_house + "</div>")
+                        .style("left", (event.pageX) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                    })
+                    .on("mouseout", function(d) {
+                        div.transition()
+                        .duration(500)
+                        .style("opacity", 0);
                     });
-                    p.append('title');
-                    return p;
-                })
-                .attr('d', (d) => path(d.feature))
-                .style('fill', function(d) {
-                    if (d.state_color == 'Red') {
-                        return '#B93E3C';
-                    }
-                    else if (d.state_color == 'Blue'){
-                        return '#3673B2';
-                    }
-                    else {
-                        return '#DECDBE';
-                    }
-                })
-                .on("mouseover", function(event,d) {
-                    div.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                    // div.html(formatTime(d.date) + "<br/>" + d.close)
-                    div.html(
-                        "<div id='stateName'>" + d.name + "</div><div id='stateLegislatureHighlights'>" +
-                        "Governor: " + d.governor + "<br/>" +
-                        "State Senate: " + d.state_senate + "<br/>" +
-                        "State House: " + d.state_house + "</div>")
-                    .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY - 28) + "px");
-                })
-                .on("mouseout", function(d) {
-                    div.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-                });
-            paths.select('title').text((d) => d.name);
-
-            // // add the dots with tooltips
-            // svg.selectAll("path")
-            //     .data(state_data)
-            //     .enter().append("circle")
-            //     .attr("r", 5)
-            //     .attr("cx", function(d) { return x(d.date); })
-            //     .attr("cy", function(d) { return y(d.close); })
-            //     .on("mouseover", function(event,d) {
-            //         div.transition()
-            //         .duration(200)
-            //         .style("opacity", .9);
-            //         div.html(formatTime(d.date) + "<br/>" + d.close)
-            //         .style("left", (event.pageX) + "px")
-            //         .style("top", (event.pageY - 28) + "px");
-            //     })
-            //     .on("mouseout", function(d) {
-            //         div.transition()
-            //         .duration(500)
-            //         .style("opacity", 0);
-            //     });
-
-            // // Draw counties out
-            // var svg = d3
-            //         .select("body")
-            //         .append("svg")
-            //         .attr("width", width + margin.left + margin.right)
-            //         .attr("height", height + margin.top + margin.bottom)
-            //         .append("g")
-            //         .attr("id","counties")
-            //         // .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-            // const county_data = counties.map((feature) => ({
-            //     feature: feature,
-            //     name: feature.properties.name,
-            //     value: Math.random() // random value
-            // }));
-
-            // var paths = svg.selectAll('path').data(county_data)
-            //                 .join((enter) => {
-            //     const p = enter.append('path');
-            //     p.on('mouseenter', function() { 
-            //       d3.select(this).raise();
-            //     });
-            //     p.append('title');
-            //     return p;
-            // })
-            // .attr('d', (d) => path(d.feature))
-            // .style('fill', (d) => color(d.value));
-            // paths.select('title').text((d) => d.name);
-
+                paths.select('title').text((d) => d.name);
+            }
         }
-
-
     </script>
 </body>
 </html>
